@@ -67,7 +67,7 @@ def monthly_summary():
     print(monthly_data.groupby("Category")["Amount"].sum())
 
 
-# Pie Chart Visualization
+# Pie Chart
 def show_pie_chart():
     df = pd.read_csv(FILE_NAME)
 
