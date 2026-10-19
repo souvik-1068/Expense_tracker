@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Budgets · Expense Tracker{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">PLAN AHEAD</p><h1>Budgets</h1><p class="muted">Set a monthly limit for each category.</p></div></div>
+<form class="filter-row" method="get"><label>Month <input type="month" name="month" value="{{ month }}"></label><button class="button secondary">Apply</button></form>
+<section class="panel"><h2>Set or update a budget</h2>
+<form method="post" class="expense-form">
+<input type="hidden" name="month" value="{{ month }}">
+<label>Category <input name="category" placeholder="Food" required></label>
+<label>Monthly limit (₹) <input type="number" name="monthly_limit" min="0.01" step="0.01" required></label>
+<button class="button">Save budget</button>
+</form></section>
+<section class="panel"><h2>Budget progress · {{ month }}</h2>
+{% if budgets %}{% for b in budgets %}
+{% set pct = (b.spent / b.monthly_limit * 100) if b.monthly_limit else 0 %}
+<div class="budget-item"><div class="panel-heading"><strong>{{ b.category }}</strong><span>₹{{ "%.2f"|format(b.spent) }} / ₹{{ "%.2f"|format(b.monthly_limit) }}</span></div>
+<div class="progress"><div class="{% if pct >= 100 %}over{% elif pct >= 80 %}warning{% endif %}" style="width: {{ [pct, 100]|min }}%"></div></div>
+<p class="{% if pct >= 100 %}danger-text{% elif pct >= 80 %}warning-text{% else %}muted{% endif %}">{% if pct >= 100 %}Over budget by ₹{{ "%.2f"|format(b.spent-b.monthly_limit) }}{% elif pct >= 80 %}{{ "%.0f"|format(pct) }}% used — approaching limit{% else %}{{ "%.0f"|format(pct) }}% used · ₹{{ "%.2f"|format(b.monthly_limit-b.spent) }} remaining{% endif %}</p></div>
+{% endfor %}{% else %}<p class="muted">No budgets set for this month.</p>{% endif %}
+</section>
+{% endblock %}

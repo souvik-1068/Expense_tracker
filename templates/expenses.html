@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Transactions · Expense Tracker{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">RECORDS</p><h1>Transactions</h1><p class="muted">Add and review your expenses.</p></div></div>
+<section class="panel">
+<h2>Add an expense</h2>
+<form method="post" class="expense-form">
+  <label>Date <input type="date" name="date" value="{{ today }}" required></label>
+  <label>Category <input name="category" placeholder="Food, Travel, Shopping..." required maxlength="80"></label>
+  <label>Amount (₹) <input type="number" name="amount" min="0.01" step="0.01" placeholder="250.00" required></label>
+  <label>Description <input name="description" placeholder="Optional note" maxlength="250"></label>
+  <button class="button" type="submit">Save expense</button>
+</form>
+</section>
+<section class="panel"><h2>All transactions</h2>
+{% if expenses %}<div class="table-wrap"><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th></th></tr></thead><tbody>
+{% for item in expenses %}<tr><td>{{ item.date }}</td><td>{{ item.category }}</td><td>{{ item.description }}</td><td>₹{{ "%.2f"|format(item.amount) }}</td><td><form method="post" action="{{ url_for('delete_expense', expense_id=item.id) }}" onsubmit="return confirm('Delete this expense?')"><button class="link-danger" type="submit">Delete</button></form></td></tr>{% endfor %}
+</tbody></table></div>{% else %}<p class="muted">No transactions yet. Run <code>python migrate_csv.py</code> to import your existing CSV.</p>{% endif %}
+</section>
+{% endblock %}

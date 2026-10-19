@@ -1,0 +1,10 @@
+﻿.venv/
+__pycache__/
+*.py[cod]
+instance/
+*.db
+*.sqlite
+*.sqlite3
+expenses.csv
+expenses.csv.backup
+.env
