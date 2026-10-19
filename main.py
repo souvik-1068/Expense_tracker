@@ -1,3 +1,4 @@
+from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
@@ -13,7 +14,16 @@ if not os.path.exists(FILE_NAME):
 
 # Add Expense
 def add_expense():
-    date = input("Enter date (YYYY-MM-DD): ")
+# Enter and validate the date
+    while True:
+        date = input("Enter date (YYYY-MM-DD): ").strip()
+
+        try:
+            datetime.strptime(date, "%Y-%m-%d")
+            break
+        except ValueError:
+            print("Invalid date! Please enter a valid date in YYYY-MM-DD format (e.g. 2026-06-13).")
+    
     category = input("Enter category (Food, Travel, Shopping etc): ")
     amount = float(input("Enter amount: "))
     description = input("Enter description: ")
@@ -49,7 +59,7 @@ def monthly_summary():
         print("No data available.")
         return
 
-    df["Date"] = pd.to_datetime(df["Date"])
+    df["Date"] = pd.to_datetime(df["Date"], format="%Y-%m-%d", errors="coerce")
 
     month = input("Enter month (YYYY-MM): ")
 
